@@ -1,7 +1,6 @@
 import os
 import xmltodict
 
-
 for file in os.listdir("./"):
     if file.endswith(".fnt"):
         with open(file) as xmlFile:
@@ -40,7 +39,7 @@ for file in os.listdir("./"):
 for file in os.listdir("./"):
     if file.endswith(".fnt"):
         os.remove(file)
-        continue
+        continue 
 
     name = os.path.splitext(file)[0]
     ext = os.path.splitext(file)[1]

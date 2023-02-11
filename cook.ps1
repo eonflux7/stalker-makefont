@@ -1,7 +1,7 @@
 $7zipPath = "$env:ProgramFiles\7-Zip\7z.exe"
 $nvttPath = "$env:ProgramFiles\NVIDIA Corporation\NVIDIA Texture Tools\nvtt_export.exe"
 Set-Alias Start-SevenZip $7zipPath
-Set-Alias Start-NVTT $nvttPath                          
+Set-Alias Start-NVTT $nvttPath
 
 
 python ./parse.py
