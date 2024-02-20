@@ -12,14 +12,14 @@ A collection of scripts to automate making bitmap fonts compatible with S.T.A.L.
    - `graff22` - bigger version of main menu font
 3. Launch run.ps1 PowerShell script.
 
-## Trivia
+## Additional information
 
 Stalker font maps should be compressed with DXT5 (BC3) and DDS format. That's why we need NVTTE to compress BMFont maps into the right format.
 
 The ini file is a custom config format for the maps. It has mostly the same Unicode decimal numbers for each glyph, except some empty glyphs are replaced, for example glyph with a decimal 149 in the Stalker map is used for a bullet point (in Unicode it is decimal 8226).
 
-## Todo
+#### todo:
 
-- Refactor and make scripts configurable via json
-- Fix to include bullet points in the map
-- Add bmfont to the script
+- refactor and make scripts configurable via json
+- fix to include bullet points in the map
+- add bmfont to the script
