@@ -154,11 +154,12 @@ Shipped packages contain only `.dds`/`.ini`, so `.fnt` is optional.  Add
   `_cent`, ...) to the filename.  Use `--suffix` to match your
   `localization.ltx`.
 
-## Legacy script
+## Legacy version
 
-`let_him_cook.py` and `template_conf.bmfc` are the original implementation.
-They are kept for reference and for the `--backend bmfont` path.  The new
-entry point is `makefont.py`.
+The pre-rewrite BMFont-only implementation (`let_him_cook.py` plus
+`template_conf.bmfc`) is preserved in the `legacy-bmfont` git tag.  The
+BMFont backend now uses a built-in template; pass `--template` to use a
+custom `.bmfc` file.
 
 ## Tests
 

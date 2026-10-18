@@ -14,6 +14,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from makefont import (  # noqa: E402
+    BMFC_TEMPLATE,
     FAMILIES,
     Glyph,
     Job,
@@ -210,6 +211,14 @@ class DdsTests(unittest.TestCase):
                 alpha = load_dds_alpha(path)
                 self.assertEqual(alpha.size, (2, 2))
                 self.assertEqual(alpha.getpixel((1, 1)), 255)
+
+
+class TemplateTests(unittest.TestCase):
+    def test_bmfc_template_placeholders(self):
+        for placeholder in ("$fontname", "$fontsize", "$w", "$h"):
+            self.assertIn(placeholder, BMFC_TEMPLATE)
+        self.assertIn("forceZero=1", BMFC_TEMPLATE)
+        self.assertIn("textureFormat=dds", BMFC_TEMPLATE)
 
 
 class JobTests(unittest.TestCase):

@@ -46,8 +46,68 @@ from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Iterable, Sequence
 
-SCRIPT_DIR = Path(__file__).resolve().parent
-DEFAULT_TEMPLATE = SCRIPT_DIR / "template_conf.bmfc"
+# BMFont's command-line configuration.  Kept inline so the repository does
+# not need a separate template file; pass --template to use a custom one.
+BMFC_TEMPLATE = """# AngelCode Bitmap Font Generator configuration file
+fileVersion=1
+
+# font settings
+fontName=$fontname
+fontFile=
+charSet=0
+fontSize=$fontsize
+aa=1
+scaleH=100
+useSmoothing=1
+isBold=0
+isItalic=0
+useUnicode=0
+disableBoxChars=1
+outputInvalidCharGlyph=0
+dontIncludeKerningPairs=1
+useHinting=1
+renderFromOutline=0
+useClearType=0
+autoFitNumPages=0
+autoFitFontSizeMin=0
+autoFitFontSizeMax=0
+
+# character alignment
+paddingDown=0
+paddingUp=0
+paddingRight=0
+paddingLeft=0
+spacingHoriz=1
+spacingVert=1
+useFixedHeight=0
+forceZero=1
+widthPaddingFactor=0.00
+
+# output file
+outWidth=$w
+outHeight=$h
+outBitDepth=32
+fontDescFormat=1
+fourChnlPacked=0
+textureFormat=dds
+textureCompression=3
+alphaChnl=1
+redChnl=4
+greenChnl=4
+blueChnl=4
+invA=0
+invR=0
+invG=0
+invB=0
+
+# outline
+outlineThickness=0
+
+# selected chars
+chars=32-126,128,130-140,142,145-156,158-255
+
+# imported icon images
+"""
 
 
 # ---------------------------------------------------------------------------
@@ -141,7 +201,7 @@ def all_jobs() -> list[Job]:
 # Character set / codepage handling
 # ---------------------------------------------------------------------------
 
-# The exact set from the original template_conf.bmfc (a Windows ANSI set).
+# The original BMFont charset (a Windows ANSI set).
 DEFAULT_CHARSET_BYTES: tuple[int, ...] = (
     tuple(range(32, 127))
     + (128,)
@@ -549,13 +609,17 @@ def render_bmfont(
     font_size: int,
     texture_size: int,
     work_dir: Path,
-    template_path: Path,
+    template_path: Path | None,
     bmfont: str,
     windows_charset: int | None,
     font_path: Path | None,
     verbose: bool,
 ) -> Rendered:
-    template = template_path.read_text(encoding="utf-8")
+    template = (
+        template_path.read_text(encoding="utf-8")
+        if template_path is not None
+        else BMFC_TEMPLATE
+    )
     config = (
         template
         .replace("$fontname", job.family.display_name)
@@ -1012,7 +1076,10 @@ def build_parser() -> argparse.ArgumentParser:
         "--windows-charset", type=int, default=None,
         help="BMFont charSet override, e.g. 204 for Russian (cp1251)",
     )
-    parser.add_argument("--template", default=str(DEFAULT_TEMPLATE))
+    parser.add_argument(
+        "--template", default=None,
+        help="optional custom BMFont .bmfc template",
+    )
     parser.add_argument("--list", action="store_true", help="list jobs and exit")
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--verbose", "-v", action="store_true")
@@ -1167,7 +1234,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                     font_size=target_cell,
                     texture_size=texture,
                     work_dir=work_dir,
-                    template_path=Path(args.template),
+                    template_path=Path(args.template) if args.template else None,
                     bmfont=args.bmfont,
                     windows_charset=windows_charset,
                     font_path=fonts.get(job.family.key),
@@ -1264,7 +1331,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 if len(heights) > 1:
                     print(
                         "  warning: glyph cell heights vary; set forceZero=1 "
-                        "in template_conf.bmfc",
+                        "in the BMFont template",
                         file=sys.stderr,
                     )
                 if abs(fnt.size) != target_cell:
