@@ -1,0 +1,3 @@
+# Required for the fontbm backend's fixed-height repack and for the
+# preview/compare tools.  A system DDS compressor is optional.
+Pillow>=10.0
